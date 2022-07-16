@@ -4,7 +4,7 @@
       <!-- 記得把 src v-bind 才取得到資料，不用 {{}} -->
       <img
         class="card-img-top"
-        :src="restaurant.image"
+        :src="restaurant.image | emptyImage"
         alt="Card image cap"
         width="286px"
         height="180px"
@@ -63,7 +63,13 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins";
+
 export default {
+  name: "RestaurantCard",
+
+  mixins: [emptyImageFilter],
+
   props: {
     initialRestaurant: {
       // 在父層用 for 迴圈從陣列中取出，所以是物件

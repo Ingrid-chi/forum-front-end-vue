@@ -17,7 +17,11 @@
     <div id="navbarSupportedContent" class="navbar-collapse collapse">
       <div class="ml-auto d-flex align-items-center">
         <!-- is user is admin -->
-        <router-link v-if="currentUser.isAdmin" to="#" class="text-white mr-3">
+        <router-link
+          v-if="currentUser.isAdmin"
+          to="/admin"
+          class="text-white mr-3"
+        >
           管理員後台
         </router-link>
 
@@ -25,7 +29,13 @@
         <!-- 新增一個 <template> 來包住使用者登入後才會看到的內容、並直接將 v-if 寫在這個 <template>上。 -->
         <!-- 不用 <div> 或其他標籤的原因，是因為如果使用 <div> 等標籤，最後產出的 HTML 就會多包一層 <div>；為了不影響樣式、並保持結構單純，在這裡我們就技巧性地選擇不會產生成 HTML 的<template> 標籤。 -->
         <template v-if="isAuthenticated">
-          <router-link to="user" class="text-white mr-3">
+          <router-link
+            :to="{
+              name: 'user',
+              params: { id: currentUser.id },
+            }"
+            class="text-white mr-3"
+          >
             {{ currentUser.name || "使用者" }} 您好
           </router-link>
           <button

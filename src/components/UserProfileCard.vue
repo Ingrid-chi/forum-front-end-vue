@@ -2,7 +2,7 @@
   <div class="card mb-3">
     <div class="row no-gutters">
       <div class="col-md-4">
-        <img :src="user.image" width="300px" height="300px" />
+        <img :src="user.image | emptyImage" width="300px" height="300px" />
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -29,7 +29,15 @@
 
           <!-- 當使用者的 ID 等於當前使用者的 ID，btn 出現 Edit; 否則是追蹤或取消追蹤(看是否已追追蹤)，指到別人的頁面時 -->
           <template v-if="currentUser.id === user.id">
-            <a class="btn btn-primary"> Edit </a>
+            <router-link
+              :to="{
+                name: 'user-edit',
+                params: { id: user.id },
+              }"
+              class="btn btn-primary"
+            >
+              Edit
+            </router-link>
           </template>
           <template v-else>
             <button
@@ -55,6 +63,7 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins";
 // 給當前使用者一組假資料
 const dummyUser = {
   currentUser: {
@@ -66,8 +75,11 @@ const dummyUser = {
   },
   isAuthenticated: true,
 };
+
 export default {
   name: "UserProfileCard",
+
+  mixins: [emptyImageFilter],
 
   props: {
     user: {

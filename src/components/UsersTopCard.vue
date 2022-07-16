@@ -1,7 +1,7 @@
 <template>
   <div class="col-3">
     <a href="#">
-      <img :src="user.image" width="140px" height="140px" />
+      <img :src="user.image | emptyImage" width="140px" height="140px" />
     </a>
     <h2>{{ user.name }}</h2>
     <span class="badge badge-secondary"
@@ -29,8 +29,13 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins";
+
 export default {
   name: "UsersTopCard",
+
+  mixins: [emptyImageFilter],
+
   props: {
     initialUser: {
       type: Object,

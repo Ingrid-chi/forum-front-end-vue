@@ -1301,6 +1301,19 @@ export default {
     UserFollowersCard,
     UserFollowingsCard,
   },
+
+  props: {
+    initialUser: {
+      type: Object,
+      default: () => {
+        return {
+          name: "",
+          image: "",
+        };
+      },
+    },
+  },
+
   data() {
     return {
       user: {
