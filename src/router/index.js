@@ -13,7 +13,7 @@ const routes = [
     path: "/",
     name: "root",
     // redirect = 重新定向
-    redirect: "/restaurants",
+    redirect: "/signin",
   },
   {
     path: "/signin",

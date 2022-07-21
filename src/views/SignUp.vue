@@ -62,8 +62,12 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-        Submit
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >
+        {{ isProcessing ? "處理中..." : "Submit" }}
       </button>
 
       <div class="text-center mb-3">
@@ -78,25 +82,82 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
+
 export default {
+  name: "SingUp",
+
   data() {
     return {
       name: "",
       email: "",
       password: "",
       passwordCheck: "",
+      isProcessing: false,
     };
   },
 
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck,
-      });
-      console.log("data", data);
+    async handleSubmit() {
+      try {
+        // 回到錯誤訊息的時候，可以指出哪個空格
+        const formKeys = ["name", "email", "password", "passwordCheck"];
+        let errorField = [];
+
+        formKeys.forEach((key) => {
+          if (!this[key]) errorField.push(key);
+        });
+
+        if (
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.passwordCheck
+        ) {
+          Toast.fire({
+            icon: "error",
+            title: "請填入 ${errorField.join(', ')",
+          });
+          return;
+        }
+
+        this.isProcessing = true;
+
+        const response = await authorizationAPI.signUp({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        });
+
+        const { data } = response;
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.$router.push("/signin");
+        console.log("response", response);
+      } catch (error) {
+        this.password = "";
+        this.isProcessing = false;
+
+        Toast.fire({
+          icon: "error",
+          title: "無法註冊，請稍後再試",
+        });
+        console.log("error", error);
+      }
+      // handleSubmit() {
+      //   const data = JSON.stringify({
+      //     name: this.name,
+      //     email: this.email,
+      //     password: this.password,
+      //     passwordCheck: this.passwordCheck,
+      //   });
+      //   console.log("data", data);
+      // },
     },
   },
 };

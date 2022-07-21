@@ -34,279 +34,12 @@ import RestaurantCard from "./../components/RestaurantCard";
 import RestaurantsNavPills from "./../components/RestaurantsNavPills";
 import RestaurantsPagination from "./../components/RestaurantsPagination";
 
-const dummyData = {
-  restaurants: [
-    {
-      id: 1,
-      name: "Dovie West",
-      tel: "994.374.0553",
-      address: "881 Howe Common",
-      opening_hours: "08:00",
-      description: "Et quibusdam ratione in ea ut sint quia. Dolorem c",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=4.080196809105563",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 4,
-      Category: {
-        id: 4,
-        name: "墨西哥料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 2,
-      name: "Della Raynor II",
-      tel: "1-311-660-8908 x46917",
-      address: "37296 Abe Lodge",
-      opening_hours: "08:00",
-      description: "Voluptas magnam reiciendis iure. Reiciendis non be",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=44.35757111816216",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 4,
-      Category: {
-        id: 4,
-        name: "墨西哥料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 3,
-      name: "Magnolia Nikolaus",
-      tel: "(258) 288-6797",
-      address: "053 Jacobs Keys",
-      opening_hours: "08:00",
-      description: "consequatur at veniam",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=61.86115930310543",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 3,
-      Category: {
-        id: 3,
-        name: "義大利料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 4,
-      name: "Trevion Beer",
-      tel: "470.946.9757 x921",
-      address: "8832 Stanton Ridge",
-      opening_hours: "08:00",
-      description: "Eius dolores repellendus molestias cumque minima e",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=64.28008969873773",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 4,
-      Category: {
-        id: 4,
-        name: "墨西哥料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 5,
-      name: "Elena Cummerata",
-      tel: "1-441-598-5179 x902",
-      address: "40756 Caden Villages",
-      opening_hours: "08:00",
-      description: "Voluptatibus voluptatem repellat consequatur quaer",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=65.68448232548256",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 2,
-      Category: {
-        id: 2,
-        name: "日本料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 6,
-      name: "Walker Kirlin",
-      tel: "895-680-8401 x028",
-      address: "133 Deonte Squares",
-      opening_hours: "08:00",
-      description: "quia",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=2.676565682448273",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 4,
-      Category: {
-        id: 4,
-        name: "墨西哥料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 7,
-      name: "Esteban Rogahn",
-      tel: "941-055-8370",
-      address: "7327 June Fort",
-      opening_hours: "08:00",
-      description: "quam",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=0.8883556229971612",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 3,
-      Category: {
-        id: 3,
-        name: "義大利料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 8,
-      name: "Shakira Dietrich",
-      tel: "(725) 760-4982",
-      address: "279 Keebler Course",
-      opening_hours: "08:00",
-      description: "Aut qui molestiae ut quia sit dicta odit unde. Off",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=95.29393359994512",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 5,
-      Category: {
-        id: 5,
-        name: "素食料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 9,
-      name: "Stephen Hudson",
-      tel: "180.613.3309 x5767",
-      address: "5959 Grady Knolls",
-      opening_hours: "08:00",
-      description: "vitae et architecto",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=53.344720971275784",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 3,
-      Category: {
-        id: 3,
-        name: "義大利料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-    {
-      id: 10,
-      name: "Alanna Koelpin",
-      tel: "051-623-0441",
-      address: "37523 Torp Squares",
-      opening_hours: "08:00",
-      description: "Optio modi sit quos quod tempore eligendi nisi et ",
-      image:
-        "https://loremflickr.com/320/240/restaurant,food/?random=95.21855009282969",
-      viewCounts: 0,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      CategoryId: 5,
-      Category: {
-        id: 5,
-        name: "素食料理",
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-      },
-      isFavorited: false,
-      isLiked: false,
-    },
-  ],
-  categories: [
-    {
-      id: 1,
-      name: "中式料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 2,
-      name: "日本料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 3,
-      name: "義大利料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 4,
-      name: "墨西哥料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 5,
-      name: "素食料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 6,
-      name: "美式料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 7,
-      name: "複合式料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-  ],
-  categoryId: "",
-  page: 1,
-  totalPage: [1, 2, 3, 4, 5],
-  prev: 1,
-  next: 2,
-};
+// STEP 1：透過 import 匯入剛剛撰寫好用來呼叫 API 的方法
+import restaurantsAPI from "./../apis/restaurants";
+// error
+import { Toast } from "./../utils/helpers";
+
+// STEP 2-1： 將 dummyData 刪除
 
 export default {
   name: "Restaurants",
@@ -329,27 +62,78 @@ export default {
     };
   },
   created() {
-    this.fetchRestaurants();
+    // STEP 3：在 created 的時候呼叫 fetchRestaurants 方法
+    // 這裡會向伺服器請求第一頁且不分餐廳類別的資料
+    const { page = "", categoryId = "" } = this.$route.query;
+    this.fetchRestaurants({ queryPage: page, queryCategoryId: categoryId });
   },
+
+  // 使用 beforeRouteUpdate 方法取得使用者路由變化
+  beforeRouteUpdate(to, from, next) {
+    // 假設沒有 page 的情況下，會變成 "undefined", 所以 { page = "", categoryId = "" } 告訴他就全撈吧!
+    const { page = "", categoryId = "" } = to.query;
+    this.fetchRestaurants({ queryPage: page, queryCategoryId: categoryId });
+    next();
+  },
+
   methods: {
-    fetchRestaurants() {
-      const {
-        restaurants,
-        categories,
-        categoryId,
-        page,
-        totalPage,
-        prev,
-        next,
-      } = dummyData;
-      this.restaurants = restaurants;
-      this.categories = categories;
-      this.categoryId = categoryId;
-      this.currentPage = page;
-      this.totalPage = totalPage;
-      this.previousPage = prev;
-      this.nextPage = next;
+    // STEP 2：將 fetchRestaurants 改成 async...await 的語法
+    // 並且可以帶入參數 page 與 categoryId
+    // 呼叫 API 後取得 response
+    async fetchRestaurants({ queryPage, queryCategoryId }) {
+      try {
+        const response = await restaurantsAPI.getRestaurants({
+          page: queryPage,
+          categoryId: queryCategoryId,
+        });
+
+        // STEP 2：透過解構賦值，將所需要的資料從 response.data 取出
+        const {
+          restaurants,
+          categories,
+          categoryId,
+          page,
+          totalPage,
+          prev,
+          next,
+        } = response.data;
+
+        // STEP 3：將從伺服器取得的 data 帶入 Vue 內
+        this.restaurants = restaurants;
+        this.categories = categories;
+        this.categoryId = categoryId;
+        this.currentPage = page;
+        this.totalPage = totalPage;
+        this.previousPage = prev;
+        this.nextPage = next;
+
+        console.log("response", response);
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得餐廳資料，請稍後再試",
+        });
+        console.log("error", error);
+      }
     },
+    // fetchRestaurants() {
+    //   const {
+    //     restaurants,
+    //     categories,
+    //     categoryId,
+    //     page,
+    //     totalPage,
+    //     prev,
+    //     next,
+    //   } = dummyData;
+    //   this.restaurants = restaurants;
+    //   this.categories = categories;
+    //   this.categoryId = categoryId;
+    //   this.currentPage = page;
+    //   this.totalPage = totalPage;
+    //   this.previousPage = prev;
+    //   this.nextPage = next;
+    // },
   },
 };
 </script>

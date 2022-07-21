@@ -15,52 +15,10 @@
 import NavTabs from "./../components/NavTabs";
 import UsersTopCard from "./../components/UsersTopCard";
 
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "root",
-      email: "root@example.com",
-      password: "$2a$10$NSBIRKQnYTG4EbakrdgzA.pDzIgU6JFKUwA3AnlsUazdE1ZjoesT.",
-      isAdmin: true,
-      image:
-        "https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      Followers: [],
-      FollowerCount: 0,
-      isFollowed: false,
-    },
-    {
-      id: 2,
-      name: "user1",
-      email: "user1@example.com",
-      password: "$2a$10$JRYafUdf.eIpohALPeWMm.kXc2ZXa.4C5qTeGCxtUnN8dxAIIyBR6",
-      isAdmin: false,
-      image:
-        "https://i.picsum.photos/id/1062/5092/3395.jpg?hmac=o9m7qeU51uOLfXvepXcTrk2ZPiSBJEkiiOp-Qvxja-k",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      Followers: [],
-      FollowerCount: 0,
-      isFollowed: false,
-    },
-    {
-      id: 3,
-      name: "user2",
-      email: "user2@example.com",
-      password: "$2a$10$K7B8Qhcyb38HJcnWn3vM0ua92GTRVYmDLmgzlNmiNhguqg/F77e3e",
-      isAdmin: false,
-      image:
-        "https://i.picsum.photos/id/200/1920/1280.jpg?hmac=-eKjMC8-UrbLMpy1A4OWrK0feVPB3Ka5KNOGibQzpRU",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-      Followers: [],
-      FollowerCount: 0,
-      isFollowed: false,
-    },
-  ],
-};
+// STEP 1: 載入 API 方法和 Toast 提示工具
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "UsersTop",
   components: {
@@ -76,10 +34,23 @@ export default {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
-      const { users } = dummyData;
-      this.users = users;
+    // 決定要有幾個小孩(UsersTopCard)，上面 v-for="user in users"
+    async fetchUsers() {
+      try {
+        const { data } = await usersAPI.getTopUsers();
+
+        this.users = data.users;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得美食達人，請稍後再試",
+        });
+      }
     },
+    // fetchUsers() {
+    //   const { users } = dummyData;
+    //   this.users = users;
+    // },
   },
 };
 </script>

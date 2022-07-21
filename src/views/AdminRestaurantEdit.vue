@@ -2,6 +2,7 @@
   <div class="container py-5">
     <AdminRestaurantForm
       :initial-restaurant="restaurant"
+      :is-processing="isProcessing"
       @after-submit="handleAfterSubmit"
     />
   </div>
@@ -10,19 +11,11 @@
 <script>
 import AdminRestaurantForm from "./../components/AdminRestaurantForm.vue";
 
-const dummyData = {
-  restaurant: {
-    id: 1,
-    name: "Laurence Reynolds",
-    tel: "1-657-067-3756 x9782",
-    address: "187 Kirlin Squares",
-    opening_hours: "08:00",
-    description: "sit est mollitia",
-    image:
-      "https://loremflickr.com/320/240/restaurant,food/?random=91.29816290184887",
-    CategoryId: 3,
-  },
-};
+// STEP 1: 匯入 adminAPI 和錯誤提示用的 Toast
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+
+// 刪除 dummyData
 
 export default {
   name: "AdminRestaurantEdit",
@@ -43,6 +36,8 @@ export default {
         image: "",
         openingHours: "",
       },
+
+      isProcessing: false,
     };
   },
 
@@ -52,29 +47,82 @@ export default {
     this.fetchRestaurant(id);
   },
 
-  methods: {
-    fetchRestaurant(restaurantId) {
-      console.log("fetchRestaurant id:", restaurantId);
-      const { restaurant } = dummyData;
-      this.restaurant = {
-        ...this.restaurant,
-        id: restaurant.id,
-        name: restaurant.name,
-        categoryId: restaurant.CategoryId,
-        tel: restaurant.tel,
-        address: restaurant.address,
-        description: restaurant.description,
-        image: restaurant.image,
-        openingHours: restaurant.opening_hours,
-      };
-    },
+  beforeRouteUpdate(to, from, next) {
+    // 路由改變時重新抓取資料
+    const { id } = to.params;
+    this.fetchRestaurant(id);
+    next();
+  },
 
-    handleAfterSubmit(formData) {
-      // 取得表單內容，需透過 entries() 來逐條列出表單的欄位和值
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ":" + value);
+  methods: {
+    // STEP 2: 改成 async...await 語法
+    async fetchRestaurant(restaurantId) {
+      try {
+        const { data } = await adminAPI.restaurants.getDetail({ restaurantId });
+
+        // STEP 3: 透過解構賦值將需要的資料取出
+        const {
+          id,
+          name,
+          tel,
+          address,
+          opening_hours: openingHours,
+          description,
+          image,
+          CategoryId: categoryId,
+        } = data.restaurant;
+
+        // STEP 4: 將資料帶入 Vue 內
+        this.restaurant = {
+          ...this.restaurant,
+          id,
+          name,
+          tel,
+          address,
+          openingHours,
+          description,
+          image,
+          categoryId,
+        };
+      } catch (error) {
+        //  STEP 5: 錯誤處理
+        Toast.fire({
+          icon: "error",
+          title: "無法取得餐廳資料，請稍後再試",
+        });
+        console.log("error", error);
       }
     },
+
+    async handleAfterSubmit(formData) {
+      try {
+        this.isProcessing = true;
+
+        const { data } = await adminAPI.restaurants.update({
+          restaurantId: this.restaurant.id,
+          formData,
+        });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.$router.push({ name: "admin-restaurants" });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法更新餐廳資料，請稍後再試",
+        });
+        console.log("error", error);
+      }
+    },
+
+    // handleAfterSubmit(formData) {
+    // 取得表單內容，需透過 entries() 來逐條列出表單的欄位和值
+    // for (let [name, value] of formData.entries()) {
+    // console.log(name + ":" + value);
+    // }
+    // },
   },
 };
 </script>
