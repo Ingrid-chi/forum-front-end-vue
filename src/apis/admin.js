@@ -8,6 +8,34 @@ export default {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
     },
+
+    // 這裡也要放傳進去的參數 name
+    created({ name }) {
+      return apiHelper.post(
+        "/admin/categories",
+        // (1) 這邊要加傳進去的參數 name
+        { name },
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+    },
+
+    update({ categoryId, name }) {
+      return apiHelper.put(
+        `/admin/categories/${categoryId}`,
+        { name },
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+    },
+
+    delete({ categoryId }) {
+      return apiHelper.delete(`/admin/categories/${categoryId}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+    },
   },
 
   restaurants: {
