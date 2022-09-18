@@ -4,6 +4,12 @@ import { apiHelper } from "../utils/helpers";
 const getToken = () => localStorage.getItem("token");
 
 export default {
+  getRestaurant({ restaurantId }) {
+    return apiHelper.get(`/restaurants/${restaurantId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+  },
+
   getRestaurants({ page, categoryId }) {
     // 這種原生方法通常都是物件建構子，在使用時要用 new 的方式來產生實例，再透過 URLSearchParams.toString() 來產生 queryString
     const searchParams = new URLSearchParams({ page, categoryId });

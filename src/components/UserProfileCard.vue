@@ -42,14 +42,14 @@
           <template v-else>
             <button
               v-if="isFollowed"
-              @click.stop.prevent="deleteFollowing"
+              @click.stop.prevent="deleteFollowing(user.id)"
               class="btn btn-danger"
             >
               取消追蹤
             </button>
             <button
               v-else
-              @click.stop.prevent="addFollowing"
+              @click.stop.prevent="addFollowing(user.id)"
               type="button"
               class="btn btn-primary"
             >
@@ -64,17 +64,19 @@
 
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 // 給當前使用者一組假資料
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: "管理者",
-    email: "root@example.com",
-    image: "https://i.pravatar.cc/300",
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+// const dummyUser = {
+//   currentUser: {
+//     id: 1,
+//     name: "管理者",
+//     email: "root@example.com",
+//     image: "https://i.pravatar.cc/300",
+//     isAdmin: true,
+//   },
+//   isAuthenticated: true,
+// };
 
 export default {
   name: "UserProfileCard",
@@ -95,16 +97,48 @@ export default {
   data() {
     return {
       isFollowed: this.initialIsFollowed,
-      currentUser: dummyUser.currentUser,
+      // currentUser: dummyUser.currentUser,
     };
   },
 
   methods: {
-    addFollowing() {
-      this.isFollowed = true;
+    async addFollowing(userId) {
+      try {
+        const { data, statusText } = await usersAPI.addFollowing({
+          userId,
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.isFollowed = true;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法加入追蹤，請稍後再試",
+        });
+      }
     },
-    deleteFollowing() {
-      this.isFollowed = false;
+    async deleteFollowing(userId) {
+      try {
+        const { data, statusText } = await usersAPI.deleteFollowing({
+          userId,
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.isFollowed = false;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取消追蹤，請稍後再試",
+        });
+      }
+    },
+  },
+
+  watch: {
+    initialIsFollowed(isFollowed) {
+      this.isFollowed = isFollowed;
     },
   },
 };

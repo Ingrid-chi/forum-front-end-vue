@@ -21,104 +21,15 @@
 import RestaurantDetail from "./../components/RestaurantDetail";
 import RestaurantComments from "./../components/RestaurantComments";
 import CreateComment from "./../components/CreateComment";
+// STEP 1: 匯入 restaurantsAPI 和 Toast 顯示提示
+import restaurantsAPI from './../apis/restaurants';
+import { Toast } from './../utils/helpers';
+// 取得 currentUser的資料
+import { mapState } from 'vuex';
 
-const dummyData = {
-  restaurant: {
-    id: 1,
-    name: "Dovie West",
-    tel: "994.374.0553",
-    address: "881 Howe Common",
-    opening_hours: "08:00",
-    description:
-      "Et quibusdam ratione in ea ut sint quia. Dolorem cupiditate non ut provident error reprehenderit. Iure tenetur ab doloribus officiis.\n \rAliquid perferendis distinctio voluptatibus vero qui perspiciatis. Natus exercitationem excepturi molestias. Consequuntur vitae ullam enim ut quos doloremque. Rerum quia consectetur magni possimus ut qui molestiae quidem.\n \rIn culpa molestiae illum ut aut aspernatur soluta consequatur. Autem perspiciatis tenetur eos aut deserunt eum vel. Doloribus quis velit.",
-    image:
-      "https://loremflickr.com/320/240/restaurant,food/?random=4.080196809105563",
-    viewCounts: 1,
-    createdAt: "2022-07-06T10:47:46.000Z",
-    updatedAt: "2022-07-07T19:24:20.774Z",
-    CategoryId: 4,
-    Category: {
-      id: 4,
-      name: "墨西哥料理",
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    FavoritedUsers: [],
-    LikedUsers: [],
-    Comments: [
-      {
-        id: 51,
-        text: "Modi corporis quam sunt sint quibusdam.",
-        UserId: 1,
-        RestaurantId: 1,
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-        User: {
-          id: 1,
-          name: "root",
-          email: "root@example.com",
-          password:
-            "$2a$10$NSBIRKQnYTG4EbakrdgzA.pDzIgU6JFKUwA3AnlsUazdE1ZjoesT.",
-          isAdmin: true,
-          image: null,
-          createdAt: "2022-07-06T10:47:46.000Z",
-          updatedAt: "2022-07-06T10:47:46.000Z",
-        },
-      },
-      {
-        id: 1,
-        text: "Nemo necessitatibus aut cumque officia enim.",
-        UserId: 2,
-        RestaurantId: 1,
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-        User: {
-          id: 2,
-          name: "user1",
-          email: "user1@example.com",
-          password:
-            "$2a$10$JRYafUdf.eIpohALPeWMm.kXc2ZXa.4C5qTeGCxtUnN8dxAIIyBR6",
-          isAdmin: false,
-          image: null,
-          createdAt: "2022-07-06T10:47:46.000Z",
-          updatedAt: "2022-07-06T10:47:46.000Z",
-        },
-      },
-      {
-        id: 101,
-        text: "Necessitatibus quia molestiae aut et recusandae.",
-        UserId: 2,
-        RestaurantId: 1,
-        createdAt: "2022-07-06T10:47:46.000Z",
-        updatedAt: "2022-07-06T10:47:46.000Z",
-        User: {
-          id: 2,
-          name: "user1",
-          email: "user1@example.com",
-          password:
-            "$2a$10$JRYafUdf.eIpohALPeWMm.kXc2ZXa.4C5qTeGCxtUnN8dxAIIyBR6",
-          isAdmin: false,
-          image: null,
-          createdAt: "2022-07-06T10:47:46.000Z",
-          updatedAt: "2022-07-06T10:47:46.000Z",
-        },
-      },
-    ],
-  },
-  isFavorited: false,
-  isLiked: false,
-};
+// STEP 2: 移除 dummyData
 
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: "管理者",
-    email: "root@example.com",
-    image: "https://i.pravatar.cc/300",
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+// 移除 dummyUser
 
 export default {
   name: "Restaurant",
@@ -142,33 +53,73 @@ export default {
         isFavorited: false,
         isLiked: false,
       },
-      currentUser: dummyUser.currentUser,
       restaurantComments: [],
     };
   },
+
+  computed: {
+    ...mapState(['currentUser'])
+  },
+
+ // 發現路由改變了，會重新取得資料
+  beforeRouteUpdate (to, from, next) {
+    const { id } = to.params
+    this.fetchRestaurant(id)
+    next()
+  },
+
   created() {
     // 在 created 階段觸發 fetchRestaurant 前，先透過 this.$route.params 取得網址結構中，對應到 :id 的內容
     const { id: restaurantId } = this.$route.params;
     this.fetchRestaurant(restaurantId);
   },
   methods: {
-    fetchRestaurant(restaurantId) {
+    // STEP 3: 改用 async/await 語法
+    async fetchRestaurant(restaurantId) {
+     try {
       console.log("fetchRestaurant id:", restaurantId);
+      // STEP 4: 透過 restaurantsAPI 取得餐廳資訊
+      const { data } = await restaurantsAPI.getRestaurant({ restaurantId });
+
+      if (data.status === 'error') {
+        throw new Error(data.message)
+      }
+
+      // STEP 5: 透過 restaurantsAPI 取得餐廳資訊
+      const { restaurant, isFavorited, isLiked } = data;
+      const {
+        id,
+        name,
+        Category,
+        image,
+        opening_hours: openingHours,
+        tel,
+        address,
+        description,
+        Comments
+      } = restaurant;
 
       this.restaurant = {
-        id: dummyData.restaurant.id,
-        name: dummyData.restaurant.name,
-        categoryName: dummyData.restaurant.Category.name,
-        image: dummyData.restaurant.image,
-        openingHours: dummyData.restaurant.opening_hours,
-        tel: dummyData.restaurant.tel,
-        address: dummyData.restaurant.address,
-        description: dummyData.restaurant.description,
-        isFavorited: dummyData.isFavorited,
-        isLiked: dummyData.isLiked,
+        id,
+        name,
+        categoryName: Category ? Category.name : '未分類',
+        image,
+        openingHours,
+        tel,
+        address,
+        description,
+        isFavorited,
+        isLiked,
       };
 
-      this.restaurantComments = dummyData.restaurant.Comments;
+      this.restaurantComments = Comments;
+    } catch (error) {
+      // STEP 6: 透過 restaurantsAPI 取得餐廳資訊
+      Toast.fire({
+        icon: 'error',
+        title: '無法取得餐廳資料，請稍後再試'
+      });
+     }
     },
 
     afterDeleteComment(commentId) {

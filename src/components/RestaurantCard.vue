@@ -17,9 +17,13 @@
             {{ restaurant.name }}
           </router-link>
         </p>
-        <span class="badge badge-secondary">{{
-          restaurant.Category.name
-        }}</span>
+        <span class="badge badge-secondary">
+          {{
+            restaurant.Category !== null
+              ? restaurant.Category.name
+              : "餐廳未分類"
+          }}
+        </span>
         <p class="card-text text-truncate">
           {{ restaurant.description }}
         </p>

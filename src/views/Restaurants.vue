@@ -86,7 +86,7 @@ export default {
           page: queryPage,
           categoryId: queryCategoryId,
         });
-
+        console.log("response", response);
         // STEP 2：透過解構賦值，將所需要的資料從 response.data 取出
         const {
           restaurants,

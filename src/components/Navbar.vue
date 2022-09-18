@@ -51,49 +51,59 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
+// Step1: 移除 dummyUser
 // seed data
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: "管理者",
-    email: "root@example.com",
-    image: "https://i.pravatar.cc/300",
-    isAdmin: true,
-  },
-  isAuthenticated: true,
-};
+// const dummyUser = {
+//   currentUser: {
+//     id: 1,
+//     name: "管理者",
+//     email: "root@example.com",
+//     image: "https://i.pravatar.cc/300",
+//     isAdmin: true,
+//   },
+//   isAuthenticated: true,
+// };
 
 export default {
+  // Step2：移除 data 屬性
   // Vue 會在沒有資料時使用此預設值
-  data() {
-    return {
-      currentUser: {
-        id: -1,
-        name: "",
-        email: "",
-        image: "",
-        isAdmin: false,
-      },
-      isAuthenticated: false,
-    };
-  },
+  // data() {
+  //   return {
+  //     currentUser: {
+  //       id: -1,
+  //       name: "",
+  //       email: "",
+  //       image: "",
+  //       isAdmin: false,
+  //     },
+  //     isAuthenticated: false,
+  //   };
+  // },
 
+  // Step3：移除 created 和 fetchUser 的方法
   // 一般來說，只要是畫面上使用的資料，都會使用 created
-  created() {
-    this.fetchUser();
-  },
+  // created() {
+  //   this.fetchUser();
+  // },
 
-  methods: {
-    // 透過 fetchUser 來模擬「把 dummyUser 蓋過 currentUser」的動作
-    // ... 用了 spread 運算子把兩組資料打開
-    // 先打開 this.currentUser，再打開 dummyUser.currentUser，因此在 key 值相同時，dummyUser.currentUser 會覆蓋之前的資料
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...dummyUser.currentUser,
-      };
-      this.isAuthenticated = dummyUser.isAuthenticated;
-    },
+  // methods: {
+  // 透過 fetchUser 來模擬「把 dummyUser 蓋過 currentUser」的動作
+  // ... 用了 spread 運算子把兩組資料打開
+  // 先打開 this.currentUser，再打開 dummyUser.currentUser，因此在 key 值相同時，dummyUser.currentUser 會覆蓋之前的資料
+  // fetchUser() {
+  //   this.currentUser = {
+  //     ...this.currentUser,
+  //     ...dummyUser.currentUser,
+  //   };
+  //   this.isAuthenticated = dummyUser.isAuthenticated;
+  // },
+  // },
+
+  // Step4：新增 `mapState` 方法
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
   },
 };
 </script>

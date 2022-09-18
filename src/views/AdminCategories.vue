@@ -125,6 +125,7 @@ export default {
     async fetchCategories() {
       try {
         const response = await adminAPI.categories.get();
+        console.log({response})
 
         const { data, statusText } = response;
 
