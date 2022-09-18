@@ -20,7 +20,9 @@
           <td>
             <button
               v-if="user.id !== currentUser.id"
-              @click.stop.prevent="toggleIsAdmin(user.id)"
+              @click.stop.prevent="
+                toggleUserRole({ userId: user.id, isAdmin: user.isAdmin })
+              "
               type="button"
               class="btn btn-link"
             >
@@ -35,55 +37,9 @@
 
 <script>
 import AdminNav from "@/components/AdminNav";
-
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      name: "root",
-      email: "root@example.com",
-      password: "$2a$10$NSBIRKQnYTG4EbakrdgzA.pDzIgU6JFKUwA3AnlsUazdE1ZjoesT.",
-      isAdmin: true,
-      image: null,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 2,
-      name: "user1",
-      email: "user1@example.com",
-      password: "$2a$10$JRYafUdf.eIpohALPeWMm.kXc2ZXa.4C5qTeGCxtUnN8dxAIIyBR6",
-      isAdmin: false,
-      image: null,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-    {
-      id: 3,
-      name: "user2",
-      email: "user2@example.com",
-      password: "$2a$10$K7B8Qhcyb38HJcnWn3vM0ua92GTRVYmDLmgzlNmiNhguqg/F77e3e",
-      isAdmin: false,
-      image: null,
-      createdAt: "2022-07-06T10:47:46.000Z",
-      updatedAt: "2022-07-06T10:47:46.000Z",
-    },
-  ],
-};
-
-const dummyUser = {
-  profile: {
-    id: 1,
-    name: "root",
-    email: "root@example.com",
-    password: "$2a$10$NSBIRKQnYTG4EbakrdgzA.pDzIgU6JFKUwA3AnlsUazdE1ZjoesT.",
-    isAdmin: true,
-    image: null,
-    createdAt: "2022-07-06T10:47:46.000Z",
-    updatedAt: "2022-07-06T10:47:46.000Z",
-  },
-  isFollowed: false,
-};
+import { mapState } from "vuex";
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "AdminUsers",
@@ -95,8 +51,11 @@ export default {
   data() {
     return {
       users: [],
-      currentUser: {},
     };
+  },
+
+  computed: {
+    ...mapState(["currentUser"]),
   },
 
   created() {
@@ -104,22 +63,46 @@ export default {
   },
 
   methods: {
-    fetchUser() {
-      this.users = dummyData.users;
-      this.currentUser = dummyUser.profile;
+    async fetchUser() {
+      try {
+        const { data, statusText } = await adminAPI.users.get();
+        if (statusText !== "OK") {
+          throw new Error(statusText);
+        }
+        this.users = data.users;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法取得會員資料，請稍後再試",
+        });
+      }
     },
 
-    toggleIsAdmin(userId) {
-      this.users = this.users.map((user) => {
-        if (user.id === userId) {
+    async toggleUserRole({ userId, isAdmin }) {
+      try {
+        const willBeAdmin = !isAdmin;
+        const { data, statusText } = await adminAPI.users.update({
+          userId,
+          isAdmin: willBeAdmin.toString(),
+        });
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+        this.users = this.users.map((user) => {
+          if (user.id !== userId) {
+            return user;
+          }
           return {
             ...user,
-            isAdmin: !user.isAdmin,
+            isAdmin: willBeAdmin,
           };
-        }
-
-        return user;
-      });
+        });
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "無法更新會員角色，請稍後再試",
+        });
+      }
     },
   },
 };
